@@ -18,7 +18,7 @@ const CourseSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'user'
     }],
-    status:{
+    estado:{
         type: Boolean,
         default: true
     }

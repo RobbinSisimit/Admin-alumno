@@ -3,56 +3,55 @@ import { hash, verify } from 'argon2';
 import Usuario from '../users/user.model.js';
 import { generarJWT } from '../helpers/generate-JWT.js';
 
-export const login = async (req,res) =>{
-    const  {email, password, username} = req.body;
+export const login = async (req, res) => {
+    
+    const { email, password, username } = req.body;
 
     try {
 
-        const lowerEmail = email ? email.toLowerCase() : null;
-        const lowerUsername = username ? username.toLowerCase() : null;
-
-        const user = await Usuario.findOne({
-            $or: [
-                {email: lowerEmail},
-                {username: lowerUsername}
-            ]
-        });
+        const user = await user.findOne({
+            $or: [{ email }, { username }]
+        })
 
         if (!user) {
             return res.status(400).json({
-                msg :'Credenciales incorrectas, Correo no existe en la base de datos'
+                msg: "Incorrect credentials, Email does not exist in the database",
             });
         }
 
-        if (!user.estado) {
+        if (!user.state) {
             return res.status(400).json({
-                msg: 'El usuario no existe en la base de datos'
-            })
+                msg: "The user does not exist in the database",
+            });
         }
 
-        const validPassword = await verify(user.password, password);
+        const validPassword = await compare(password, user.password);
+
+
         if (!validPassword) {
             return res.status(400).json({
-                msg: 'La contraseña es incorrecta'
+                msg: 'The password is incorrect'
             })
         }
 
-        const token = await generarJWT(user.id);
+        const token = await generateJWT(user.id)
+
 
         res.status(200).json({
-            msg: `Welcome ${user.username} `,
-            userDetails:{
+            msg: 'Successful login',
+            userDetails: {
                 username: user.username,
                 token: token,
                 profilePicture: user.profilePicture
             }
         })
-    } catch (e) {
-        console.log(e);
+
+    } catch (error) {
+        console.log(error);
         res.status(500).json({
-            msg: 'Server Error',
-            error: e.message
-        })
+            msg: "Server error",
+            error: error.message
+        });
     }
 }
 

@@ -21,7 +21,8 @@ const configurarMiddlewares = (app) =>{
 
 const configurarRutas = (app) => {
     app.use("/manejo/v1/auth", authRoutes);
-    app.use("/manejo/v1/users", userRoutes )
+    app.use("/manejo/v1/users", userRoutes );
+
 }
 
 const conectarDB = async () =>{
@@ -35,7 +36,7 @@ const conectarDB = async () =>{
 
 export const iniciarServidor = async () => {
     const app = express();
-    const port = process.env.PORT || 3005;
+    const port = process.env.PORT || 3001;
 
     await conectarDB();
     configurarMiddlewares(app);
