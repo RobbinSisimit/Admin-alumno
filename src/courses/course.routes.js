@@ -1,9 +1,10 @@
 import { Router } from "express";
-import { check } from 'express-validator';
-import { getCourses, getCourseById, saveCourse, updateCourse, deleteCourse } from "./course.controller.js";
-import { validarCampos } from '../middlewares/validar-campos.js';
-import { validarJWT } from '../middlewares/validar-jwt.js';
-import { tieneRol } from "../middlewares/validar-roles.js";
+import { check } from "express-validator";
+import {saveCourse, getCourse, searchCourse, deleteCourse, updateCourse} from "./course.controller.js";
+import {validarCampos} from "../middlewares/validar-campos.js";
+import {validarJWT} from "../middlewares/validar-jwt.js";
+import {validarRol} from "../middlewares/validar-roles.js";
+
 
 const router = Router();
 
@@ -11,42 +12,45 @@ router.post(
     "/",
     [
         validarJWT,
-        tieneRol("TEACHER_ROLE"),
-        validarCampos
+        check("email", "Este No Es Un Correo Valido :D").not().isEmpty(),
+        validarCampos,
+        validarRol("TEACHER_ROLE"),
     ],
     saveCourse
 )
 
-router.get("/".getCourses);
+router.get("/", getCourse)
 
 router.get(
-    "/findCourse/:id",
+    "/:id",
     [
         validarJWT,
-        tieneRol("TEACHER_ROLE"),
-        check("id", "ID is not valid").isMongoId(),
+        check("id", "No Es Un ID Valido").isMongoId(),
         validarCampos
     ],
-    getCourseById
+    searchCourse
 )
 
 router.put(
     "/:id",
-    [
-        tieneRol("TEACHER_ROLE"),
-        check("id", "ID is invalid").isMongoId(),
-        validarCampos
+    [   
+        validarJWT,
+        validarCampos,
+        validarRol("TEACHER_ROLE")
     ],
     updateCourse
 )
 
+
 router.delete(
     "/:id",
-    [
+    [   
         validarJWT,
-        tieneRol("TEACHER_ROLE"),
-        check("id", "ID is invalid").isMongoId(),
-        validarCampos
+        check("id", "No Es Un ID Valido").isMongoId(),
+        validarCampos,
+        validarRol("TEACHER_ROLE")
     ],
     deleteCourse
 )
+
+export default router;

@@ -1,57 +1,49 @@
-import { Schema, model } from "mongoose";
+import mongoose from "mongoose";
 
-const UserSchema = Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Name is required'],
-        maxLength: [25, 'Can´t be overcome 25 cheracters']
+        required: [true, "El Nombre Es Obligatorio"]
     },
     surname: {
         type: String,
-        required: [true, 'Surname is required'],
-        maxLength: [25, 'Can"t be overcome 25 characters '],
-        unique: true
+        required: [true, "El Apellido Es Obligatorio"]
     },
     username: {
         type: String,
-        unique: true
+        required: [true, "El Nombre De Usuario Es Obligatorio"]
     },
-    email: {
+    email:{
         type: String,
-        required: [true, "Email is required"],
-        maxLength: [25, "Can;t be overcome 25 characters"]
+        required: [true, "El Correo Es Obligatorio"],
+        unique: true
     },
     password: {
         type: String,
-        required: [true, 'Password is required']
-    },
-    phone: {
-        type: String,
-        minLength: 8,
-        maxLength: 8,
-        required: [true, 'Phone number is required']
+        required: [true, "La Contraseña Es Obligatoria"]
     },
     role: {
         type: String,
-        required: true,
-        enum: ['TEACHER_ROLE','STUDENT_ROLE'],
+        required: [true, "El Rol Es Obligatorio"],
+        enum: ["TEACHER_ROLE","STUDENT_ROLE"],
         default: "STUDENT_ROLE"
     },
+    cursos: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Course",
+        default: [] 
+    }],
     estado: {
         type: Boolean,
         default: true
-    },
-    courses:[{
-        type: Schema.Types.ObjectId,
-        ref: 'course',
-
-    }]
-},
-    {
-        timestamps: true,
-        versionKey: false
     }
-);
+});
 
 
-export default model('User', UserSchema);
+UserSchema.methods.toJSON = function() {
+    const {__v,password, _id, ...usuario} = this.toObject();
+    usuario.uid = _id;
+    return usuario;
+}
+
+export default mongoose.model("User", UserSchema);

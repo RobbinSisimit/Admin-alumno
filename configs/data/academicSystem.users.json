@@ -1,0 +1,70 @@
+[{
+  "_id": {
+    "$oid": "67b2b99b49a21a4c4a8637b3"
+  },
+  "name": "Dylan",
+  "surname": "Lesander",
+  "username": "God",
+  "email": "Dylan@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$5QcO66PIFjuHWbvVgDR9Nw$DhJBwwdsc6KLyjZcihrxZka1sZVmsT+5/phJq/fi11c",
+  "role": "STUDENT_ROLE",
+  "cursos": [],
+  "estado": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2b9cf49a21a4c4a8637b6"
+  },
+  "name": "Glenda",
+  "surname": "Eldina",
+  "username": "Lentes",
+  "email": "Glenda@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$6QbR1llc/TFtWzFVVecczw$XgQ4OArjp6GVqgGChv6dhdEAHNb+5dsSW1FUWT089fg",
+  "role": "STUDENT_ROLE",
+  "cursos": [],
+  "estado": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2b9fd49a21a4c4a8637b9"
+  },
+  "name": "Dulce",
+  "surname": "Yamelet",
+  "username": "Marr",
+  "email": "Dulce@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$r0CR4dzGKDdy0d/TQvgLmw$erTKtqT+dVcHSmB1Vx4UChLufMv09Aca+5WehMhGd/w",
+  "role": "TEACHER_ROLE",
+  "cursos": [],
+  "estado": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2bdfe3cab35c51ca763cf"
+  },
+  "name": "Cortez",
+  "surname": "Jose",
+  "username": "PapáCortez",
+  "email": "Cortez@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$QZHwmFOw35BCPCSmF4z1yg$ptJyAQ1c3KJ+zHPPTlEgEI735fKGextbxpkBmMMv+YA",
+  "role": "TEACHER_ROLE",
+  "cursos": [],
+  "estado": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2c129a5847719a342304a"
+  },
+  "name": "Joaquin",
+  "surname": "Figueroa",
+  "username": "Joaki",
+  "email": "hfigueroa@gmail.com",
+  "password": "$argon2id$v=19$m=65536,t=3,p=4$lGA9NBzsmwnovjjPrXHzaw$JHoKgqJpHRistJIjHn3Ds6ChI7LgnNHAXEBIKXKnX5Y",
+  "role": "TEACHER_ROLE",
+  "cursos": [],
+  "estado": true,
+  "__v": 0
+}]

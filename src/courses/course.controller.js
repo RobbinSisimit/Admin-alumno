@@ -1,118 +1,162 @@
-import { response, request } from "express";
-import Course from './course.model.js'
+import User from "../users/user.model.js";
+import Course from "../courses/course.model.js";
 
 export const saveCourse = async (req, res) =>{
     try {
-        const data = req.body
+        const { name, description } = req.body;
+    
+        const course = new Course({
+            name,
+            description
+        });
 
-        const course = await Course.create({
-            name: data.name,
-            description: data.description,
+        await course.save();
+
+        res.status(200).json({
+            success: true,
+            course
         })
-
-        return res.status(200).json({
-            message: 'Course registered successfully',
-            couseDetails:{
-                course: course.name
-            }
-        })
-    } catch (error) {
-        res.status(500).json({
-            success:false,
-            msg: 'Error to save the course', 
-            error
-        })
-    }
-}
-
-export const getCourses = async (req = request, res = response) =>{
-    try {
-            const {limite = 10, desde = 0} = req.query;
-            const query = { estado: true};
-
-            const[total, courses] = await Promise.all([
-                Course.countDocuments(query),
-                Course.find(query)
-                    .skip(Number(desde))
-                    .limit(Number(limite))
-            ])
-
-            res.status(200).json({
-                success: true,
-                total,
-                courses
-            })
     } catch (error) {
         res.status(500).json({
             success: false,
-            msg:"Error to gets the courses",
+            message: "Error Al Guardar El Curso",
             error
         })
     }
 }
 
-export const getCourseById = async (req, res) =>{
+export const getCourse = async(req, res) => {
+    const {limite = 10, desde = 0} = req.query;
+    const query = {status: true};
     try {
-        const { id } = req.paramas;
+        const courses = await Course.find(query)
+            .skip(Number(desde))
+            .limit(Number(limite));
+
+
+        if (!courses.length) {
+            return res.status(404).json({
+                success: false,
+                message: "No se encontraron cursos"
+            });
+        }
+
+        
+        const total = await Course.countDocuments(query);
+
+        res.status(200).json({
+            success: true,
+            total,
+            courses
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error Al Obtener El Curso",
+            error
+        })
+    }
+}
+
+export const searchCourse = async (req, res) =>{
+    const {id} = req.params;
+
+    try {
         const course = await Course.findById(id);
+
         if(!course){
             return res.status(404).json({
                 success: false,
-                msg:"Course not found"
+                message: "Curso No Encontrado"
             })
+        }
+        
+        res.status(200).json({
+            success: true,
+            course
+        })
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error al buscar el curso",
+            error
+        })
+    }
+}
+
+export const deleteCourse = async(req, res) => {
+    const {id} = req.params;
+
+    try {
+        const course = await Course.findById(id);
+
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                message: "Curso no encontrado"
+            });
+        }
+
+        await User.updateMany(
+            { cursos: id },
+            { $pull: { cursos: id } }  
+        );
+
+        await Course.findByIdAndDelete(id);
+
+        res.status(200).json({
+            success: true,
+            message: "Curso Eliminado Exitosamente y Desasignado de los Estudiantes"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Error Al Eliminar El Curso",
+            error
+        });
+    }
+};
+
+
+export const updateCourse = async(req, res = response) => {
+    try {
+        const { id } = req.params; // ID del curso que se va a actualizar
+        const { _id, students, ...data } = req.body; // Extraer la información del cuerpo de la solicitud
+
+        const course = await Course.findById(id);
+        if (!course) {
+            return res.status(404).json({
+                success: false,
+                msg: "Curso no encontrado"
+            });
+        }
+
+        const updatedCourse = await Course.findByIdAndUpdate(id, data, { new: true });
+
+        if (students) {
+            await User.updateMany(
+                { cursos: id },
+                { $pull: { cursos: id } }
+            );
+
+            await User.updateMany(
+                { _id: { $in: students } },
+                { $addToSet: { cursos: id } }
+            );
         }
 
         res.status(200).json({
             success: true,
-            course
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            msg:"Error to search the course",
-            error
-        })
-    }
-}
-
-export const updateCourse = async (req, res = response) => {
-    try {
-        const { id } = req.params;
-        const {_id, ...data} = req.body;
-        const course = await Course.findByIdAndUpdate(id, data, {new: true});
-        
-        res.status(200).json({
-            success: true,
-            mesg:"Course update successfully",
-            course
-        })
+            msg: "Curso Actualizado y Alumnos Asignados!",
+            course: updatedCourse
+        });
 
     } catch (error) {
         res.status(500).json({
             success: false,
-            msg:"Error to update the course",
+            msg: "Error Al Actualizar El Curso",
             error
-        })
+        });
     }
-}
-
-export const deleteCourse = async (req, res) => {
-    try {
-        const { id } = req.paramas;
-        const course = await Course.findByIdAndUpdate(id, {estado: false}, {new: true});
-        const authoticateUser = req.user;
-        
-        res.status(200).json({
-            success: true,
-            msg:"Course delete successfully",
-            course,
-            authoticateUser
-        })
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            msg:"Error to delete the course",
-            error
-        })
-    }
-}
+};

@@ -1,32 +1,24 @@
-import { Schema, model} from 'mongoose';
+import mongoose from "mongoose";
 
-const CourseSchema = Schema({
-    name:{
+const CourseSchema = new mongoose.Schema({
+    name: {
         type: String,
-        required: [true, 'Name is required'],
+        required: [true, "El Nombre Es Obligatorio"]
     },
-    description:{
+    description: {
         type: String,
-        required: [true, 'Description is required']
+        required: [true, "La Descripcion Es Obligatoria"]
     },
-    teacher:{
-        type: Schema.Types.ObjectId,
-        ref: 'user',
-        required: true
-    },
-    students:[{
-        type: Schema.Types.ObjectId,
-        ref: 'user'
-    }],
-    estado:{
+    status: {
         type: Boolean,
         default: true
     }
-},
-    {
-        timestamps: true,
-        versionKey: false
-    }
-);
+});
 
-export default model('Course', CourseSchema);
+CourseSchema.methods.toJSON = function() {
+    const {__v,password, _id, ...usuario} = this.toObject();
+    usuario.uid = _id;
+    return usuario;
+}
+
+export default mongoose.model("Course", CourseSchema);

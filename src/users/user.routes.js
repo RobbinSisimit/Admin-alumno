@@ -1,55 +1,74 @@
 import { Router } from "express";
-import { check} from "express-validator";
-import  {getUsers, getUserById, updateUser, deleteUser, updatePassword } from "./user.controller.js";
-import { existeUserById } from "../helpers/db-validator.js";
+import { check } from "express-validator";
+import { getUsers, getUserById, updateUser, deleteUser, assignCourseToStudent, unsubscribeStudent,getAssignedCourses} from "./user.controller.js";
+import { existeUsuarioById } from "../helpers/db-validator.js";
 import { validarCampos } from "../middlewares/validar-campos.js";
-import { uploadProfilePicture} from "../middlewares/multer-upload.js";
-import { validarJWT} from "../middlewares/validar-jwt.js"
+import { validarRol } from "../middlewares/validar-roles.js";
+import { validarJWT } from "../middlewares/validar-jwt.js";
 
 const router = Router();
 
-router.get("/", getUsers)
+
+router.get("/", getUsers);
+
+router.get('/findCourse',
+    [
+        validarJWT
+    ] ,
+    getAssignedCourses
+);
+
 
 router.get(
     "/findUser/:id",
     [
-        check("id", "id is invalid").isMongoId(),
-        check("id").custom(existeUserById),
+        check("id", "No es un ID Valido").isMongoId(),
+        check("id").custom(existeUsuarioById),
         validarCampos
     ],
     getUserById
 )
 
-router.put(
-    "/:id",
-    uploadProfilePicture.single('profilePicture'),
-    [
-        check("id", "id is invalid").isMongoId(),
-        check("id").custom(existeUserById),
-        validarCampos
-    ],
-    updateUser
-)
+router.post(
+    "/assign-course", [
+        validarJWT,
+        validarRol("TEACHER_ROLE")
+    ],assignCourseToStudent
+
+    );
 
 router.put(
-    "/updatePassword/:id",
-    [
-        validarJWT,
-        check("id", "ID is not valid").isMongoId(),
-        validarCampos
-    ],
-    updatePassword
-)
+        "/:id",
+        [
+            validarJWT,
+            check("id", "No es un ID Válido").isMongoId(),
+            check("id").custom(existeUsuarioById),
+            validarCampos
+        ],
+        updateUser
+);
+    
+router.delete(
+        "/unsubscribe",
+        [
+            validarJWT,
+            validarRol("STUDENT_ROLE") // Solo permitir a los estudiantes
+        ],
+        unsubscribeStudent
+);
+    
 
 router.delete(
     "/:id",
     [
         validarJWT,
-        check("id", "id is invalid").isMongoId(),
-        check("id").custom(existeUserById),
+        check("id", "No es un ID Valido").isMongoId(),
+        check("id").custom(existeUsuarioById),
+        validarRol("TEACHER_ROLE"),
         validarCampos
     ],
     deleteUser
 )
+
 
 export default router;
