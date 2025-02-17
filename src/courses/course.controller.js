@@ -148,7 +148,7 @@ export const updateCourse = async(req, res = response) => {
 
         res.status(200).json({
             success: true,
-            msg: "Curso Actualizado y Alumnos Asignados!",
+            msg: "Curso Actualizado",
             course: updatedCourse
         });
 

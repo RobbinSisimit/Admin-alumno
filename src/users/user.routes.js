@@ -52,7 +52,7 @@ router.delete(
         "/unsubscribe",
         [
             validarJWT,
-            validarRol("STUDENT_ROLE") // Solo permitir a los estudiantes
+            validarRol("STUDENT_ROLE")
         ],
         unsubscribeStudent
 );

@@ -32,9 +32,8 @@ export const getUsers = async (req = request, res = response) => {
 
 export const getAssignedCourses = async (req, res) => {
     try {
-        const userId = req.usuario._id; // Obtener el ID del usuario autenticado
+        const userId = req.usuario._id;
 
-        // Buscar al usuario y poblar la relación de cursos
         const user = await User.findById(userId).populate('cursos');
 
         if (!user) {
@@ -46,7 +45,7 @@ export const getAssignedCourses = async (req, res) => {
 
         res.status(200).json({
             success: true,
-            cursos: user.cursos // Retornar los cursos asignados
+            cursos: user.cursos
         });
     } catch (error) {
         res.status(500).json({

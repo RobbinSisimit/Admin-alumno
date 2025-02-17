@@ -12,7 +12,7 @@ router.post(
     "/",
     [
         validarJWT,
-        check("email", "Este No Es Un Correo Valido :D").not().isEmpty(),
+        check("email", "Este No Es Un Correo Valido :D").notEmpty(),
         validarCampos,
         validarRol("TEACHER_ROLE"),
     ],
@@ -25,7 +25,7 @@ router.get(
     "/:id",
     [
         validarJWT,
-        check("id", "No Es Un ID Valido").isMongoId(),
+        check("id", "ID no valido").isMongoId(),
         validarCampos
     ],
     searchCourse
@@ -46,7 +46,7 @@ router.delete(
     "/:id",
     [   
         validarJWT,
-        check("id", "No Es Un ID Valido").isMongoId(),
+        check("id", "Id no valido").isMongoId(),
         validarCampos,
         validarRol("TEACHER_ROLE")
     ],
