@@ -72,14 +72,14 @@ export const assignCourseToStudent = async (req, res) => {
             student.cursos = [];
         }
 
-        const MAXCOURSES = 3;
+        const MAXCURSES = 3;
 
         const totalCourses = student.cursos.length + courseId.length;
 
-        if (totalCourses > MAXCOURSES) {
+        if (totalCourses > MAXCURSES) {
             return res.status(400).json({
                 success: false,
-                message: `El Estudiante Tiene El Máximo de ${MAXCOURSES} Cursos Asignados`
+                message: `El Estudiante Tiene El Máximo de ${MAXCURSES} Cursos Asignados`
             });
         }
 

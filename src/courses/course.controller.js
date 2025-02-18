@@ -121,8 +121,8 @@ export const deleteCourse = async(req, res) => {
 
 export const updateCourse = async(req, res = response) => {
     try {
-        const { id } = req.params; // ID del curso que se va a actualizar
-        const { _id, students, ...data } = req.body; // Extraer la información del cuerpo de la solicitud
+        const { id } = req.params;
+        const { _id, students, ...data } = req.body;
 
         const course = await Course.findById(id);
         if (!course) {

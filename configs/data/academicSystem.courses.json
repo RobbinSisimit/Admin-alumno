@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "67b2c49d55bc69c173efb0c6"
+  },
+  "name": "mate",
+  "description": "algebra",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2c5ae55bc69c173efb0c9"
+  },
+  "name": "Talle",
+  "description": "Progra",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b2c794d96208ef497e910c"
+  },
+  "name": "Tecno",
+  "description": "teoria de progra",
+  "status": true,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67b3ed5017b00fedaa16ea8d"
+  },
+  "name": "Biologia",
+  "description": "sobre elementos e inventos",
+  "status": true,
+  "__v": 0
+}]
