@@ -190,7 +190,7 @@ export const updateUser = async (req, res = response) => {
 
 export const unsubscribeStudent = async (req, res) => {
     try {
-        const userId = req.usuario._id; // ID del usuario autenticado
+        const userId = req.usuario._id;
         const user = await User.findByIdAndUpdate(userId, { estado: false }, { new: true });
 
         if (!user) {
@@ -219,7 +219,6 @@ export const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
 
-        // Verificar que el usuario autenticado sea un maestro antes de eliminar
         if (req.usuario.role !== "TEACHER_ROLE") {
             return res.status(403).json({
                 success: false,
@@ -244,7 +243,7 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             success: false,
-            msg: 'Error al Desactivar El Usuario',
+            msg: 'Error al intentar desabilitar El Usuario',
             error
         });
     }
